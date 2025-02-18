@@ -5,6 +5,7 @@ import axios from 'axios';
 const App = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [file, setFile] = useState(null); // Add state to store the selected file
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [centerMessage, setCenterMessage] = useState(true);
@@ -16,42 +17,45 @@ const App = () => {
     }, 2000);
   }, []);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
       const newMessages = [...messages, { text: input, sender: "user" }];
       setMessages(newMessages);
-      setInput('');
+      setInput(''); // Clear the input box after sending the message
       setCenterMessage(false); // Hide the center message when user sends a message
-      setTimeout(() => {
-        const botResponse = getBotResponse(input);
-        setMessages([...newMessages, { text: botResponse, sender: "bot" }]);
-      }, 1000);
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const response = await axios.post('http://localhost:5000/upload', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          const botResponse = `${response.data.message}`;
+          const formattedResponse = botResponse.replace(/\n/g, '<br>');
+          setMessages([...newMessages, { text: formattedResponse, sender: "bot" }]);
+          setFile(null); // Clear the file after processing
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          alert(`Error uploading file: ${error.message}`);
+        }
+      } else {
+        setTimeout(() => {
+          const botResponse = getBotResponse(input);
+          setMessages([...newMessages, { text: botResponse, sender: "bot" }]);
+        }, 1000);
+      }
     }
   };
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      try {
-        const response = await axios.post('http://localhost:5000/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        const newMessages = [...messages, { text: `File uploaded: ${file.name}`, sender: "user" }];
-        setMessages(newMessages);
-        setCenterMessage(false); // Hide the center message when user uploads a file
-        setTimeout(() => {
-          const botResponse = `You uploaded a file named ${file.name}. ${response.data.message}`;
-          setMessages([...newMessages, { text: botResponse, sender: "bot" }]);
-        }, 1000);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        alert(`Error uploading file: ${error.message}`);
-      }
+  const handleFileUpload = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile); // Store the selected file
+      setInput(`File uploaded: ${selectedFile.name}`); // Display the file name in the input box
     }
   };
 
@@ -104,7 +108,7 @@ const App = () => {
               <div className="chatbot">
                 {messages.map((message, index) => (
                   <div key={index} className={`message ${message.sender}`}>
-                    <p>{message.text}</p>
+                    <p dangerouslySetInnerHTML={{ __html: message.text }}></p>
                   </div>
                 ))}
               </div>

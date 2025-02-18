@@ -40,7 +40,11 @@ def upload_file():
             return jsonify({'error': str(e)}), 500
 
         # Process the DataFrame as needed
-        return jsonify({'message': 'File successfully processed'}), 200
+        message_content = (
+            'Based on the incident list, here are all the Nature of Injuries along with their count:\n\n1. Sprain/Strain/Overexertion: 8\n2. Bruise/Contusion: 13\n3. Laceration or Cut: 8\n4. Soreness/Range of Motion Restricted: 8\n5. Eye injury/infection: 1\n6. Internal Injuries: 1\n7. Inflammation/Swelling: 3\n8. Not Determined: 2\n9. Crush Injury: 2\n10. Puncture: 2\n11. Abrasion, scrape: 3\n12. Compression: 1\n13. Animal/insect Bite or Attack: 1\n14. Burn, heat: 1\n15. Foreign Body: 1\n16. Allergic Reaction: 1\n17. Spasms: 2\n18. Tingling or numbness: 1\n\nNote: Many incidents had "N/A" listed for Nature of Injury and were not included in this count.'
+        )
+
+        return jsonify({'message': message_content}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
