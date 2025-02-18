@@ -1,18 +1,19 @@
-/* App.css */
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden; /* Prevent scrolling */
+  overflow: hidden;
 }
 
+p {
+  margin: 0px;
+}
 .app {
   height: 100vh;
   display: flex;
-  justify-content: flex-end; /* Align to the right */
-  align-items: flex-end; /* Align to the bottom */
-  padding: 20px;
+  justify-content: flex-end;
+  align-items: flex-end;
   position: relative;
-  overflow: hidden; /* Ensure the background doesn't overflow */
+  overflow: hidden;
 }
 
 .background {
@@ -21,12 +22,12 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("C:\Users\lakshmi.nunna\Downloads\image.png");
-  background-size: cover; /* Ensure the image covers the entire background */
+  background-image: url("BGimage.png");
+  background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* Keep the background fixed while scrolling */
-  filter: blur(5px); /* Apply blur effect */
-  z-index: -1; /* Ensure it stays behind other elements */
+  background-attachment: fixed;
+  filter: blur(5px);
+  z-index: -1;
 }
 
 .loader {
@@ -36,7 +37,7 @@ html, body {
   transform: translate(-50%, -50%);
   font-size: 24px;
   color: white;
-  z-index: 1; /* Ensure it stays above the background */
+  z-index: 1;
 }
 
 .toggle-button {
@@ -44,7 +45,6 @@ html, body {
   bottom: 20px;
   right: 20px;
   padding: 10px;
-  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 50%;
@@ -55,66 +55,85 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1; /* Ensure it stays above the background */
+  z-index: 1;
 }
 
 .chatbot-container {
-  width: 300px;
+  width: 400px;
+  right: 10px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
   display: flex;
   flex-direction: column;
   position: relative;
-  z-index: 1; /* Ensure it stays above the background */
+  z-index: 1;
+}
+
+.chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1b838b;
+  color: white;
+  padding: 0px 15px 0px 15px;
+  border-radius: 10px 10px 0 0;
+  position: sticky;
+  top: 0;
+  height: 50px;
+  z-index: 2;
 }
 
 .close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background: none;
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #000; /* Ensure the icon is visible */
+  color: white;
 }
 
 .chatbot {
   flex-grow: 1;
-  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-y: auto;
   max-height: 400px;
-  min-height: 400px;
   margin-bottom: 10px;
+  min-height: 300px;
+  padding: 15px;
 }
 
 .message {
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  max-width: 80%;
+  margin-bottom: 12px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  max-width: 90%;
   display: flex;
+  max-width: 80%;
+  word-wrap: break-word;
 }
 
 .message.bot {
   background-color: #f0f0f0;
   align-self: flex-start;
   justify-content: flex-start;
-  margin-right: auto; /* Align to the left */
+  margin-right: auto;
 }
 
 .message.user {
-  background-color: #d1e7dd;
+  background-color: #d2e8ea;
   align-self: flex-end;
   justify-content: flex-end;
-  margin-left: auto; /* Align to the right */
+  display: flex;
+  max-width: 80%;
+  word-wrap: break-word;
+  margin-left: auto;
+  width: fit-content;
 }
 
 .input-container {
   display: flex;
   align-items: center;
   position: relative;
+  padding: 15px;
 }
 
 input {
@@ -122,11 +141,12 @@ input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-style: italic;
 }
 
 button {
   padding: 10px;
-  background-color: #4caf50;
+  background-color: #1b838b;
   color: white;
   border: none;
   border-radius: 5px;
@@ -134,14 +154,10 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
-}
-
 .upload-icon {
   position: absolute;
-  right: 60px; /* Adjust this value as needed */
+  right: 120px;
   cursor: pointer;
   font-size: 20px;
-  color: #4caf50;
+  color: #1b838b;
 }

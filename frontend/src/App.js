@@ -3,18 +3,17 @@ import './App.css';
 import axios from 'axios';
 
 const App = () => {
-  const [messages, setMessages] = useState([
-    { text: "Hello there! Welcome to Aroma Beans Coffee! How can I help you today?", sender: "bot" }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [centerMessage, setCenterMessage] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-      setIsOpen(true); // Automatically open the chatbot after 2 seconds
-    }, 5000); // Show loader for 2 seconds
+      setIsOpen(true);
+    }, 2000);
   }, []);
 
   const handleSend = () => {
@@ -22,6 +21,7 @@ const App = () => {
       const newMessages = [...messages, { text: input, sender: "user" }];
       setMessages(newMessages);
       setInput('');
+      setCenterMessage(false); // Hide the center message when user sends a message
       setTimeout(() => {
         const botResponse = getBotResponse(input);
         setMessages([...newMessages, { text: botResponse, sender: "bot" }]);
@@ -43,12 +43,14 @@ const App = () => {
         });
         const newMessages = [...messages, { text: `File uploaded: ${file.name}`, sender: "user" }];
         setMessages(newMessages);
+        setCenterMessage(false); // Hide the center message when user uploads a file
         setTimeout(() => {
           const botResponse = `You uploaded a file named ${file.name}. ${response.data.message}`;
           setMessages([...newMessages, { text: botResponse, sender: "bot" }]);
-        }, 10000);
+        }, 1000);
       } catch (error) {
         console.error('Error uploading file:', error);
+        alert(`Error uploading file: ${error.message}`);
       }
     }
   };
@@ -64,23 +66,41 @@ const App = () => {
     }
   };
 
+  const handleClose = () => {
+    setMessages([]);
+    setIsOpen(false);
+  };
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+    if (!isOpen) {
+      setCenterMessage(true); // Show the center message when the chatbot is opened
+    }
+  };
+
   return (
     <div className="app">
       <div className="background"></div>
       {loading ? (
-        <div className="loader">
-          <img src="https://www.ideagen.com/images/loading-gif.gif" alt="Awesome GIF" width="100" height="100"></img>
-        </div>
+        <div className="loader">Loading...</div>
       ) : (
         <>
-          <button className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
+          <button className="toggle-button" onClick={handleToggle}>
             <i className={`fas ${isOpen ? 'fa-times' : 'fa-comments'}`}></i>
           </button>
           {isOpen && (
             <div className="chatbot-container">
-              <button className="close-button" onClick={() => setIsOpen(false)}>
-                <i className="fa-solid fa-chevron-down"></i>
-              </button>
+              <div className="chatbot-header">
+                <h2>Chatbot</h2>
+                <button className="close-button" onClick={handleClose}>
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+              {centerMessage && (
+                <div className="center-message" style={{ color:'#908f8e', padding: '10px', fontStyle: 'italic', textAlign: 'center', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                  You can upload any file to summarize your data
+                </div>
+              )}
               <div className="chatbot">
                 {messages.map((message, index) => (
                   <div key={index} className={`message ${message.sender}`}>
@@ -99,7 +119,7 @@ const App = () => {
                   <i className="fa-solid fa-paperclip"></i>
                   <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} />
                 </label>
-                <button onClick={handleSend}>Send</button>
+                <button onClick={handleSend}>Summarize</button>
               </div>
             </div>
           )}
